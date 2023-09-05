@@ -1,11 +1,12 @@
 const express = require('express');
 const bookCtrl = require('../controllers/books');
 const auth = require('../middleware/auth');
+const multer = require('../middleware/multer-config');
 
 const router = express.Router();
 
 // Création d'un nouveau livre :
-router.post('/', auth, bookCtrl.createBook);
+router.post('/', auth, multer, bookCtrl.createBook);
 
 // Affichage de la note du livre :
 router.post('/:id/rating', (req, res, next) => {
@@ -30,7 +31,7 @@ router.get('/bestrating', (req, res, next) => {
 });
 
 // Mise à jour du livre :
-router.put('/:id', auth, bookCtrl.modifyBook);
+router.put('/:id', auth, multer, bookCtrl.modifyBook);
 
 // Suppression d'un livre :
 router.delete('/:id', auth, bookCtrl.deleteBook);
