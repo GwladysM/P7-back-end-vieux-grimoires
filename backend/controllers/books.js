@@ -21,7 +21,9 @@ exports.modifyBook = (req, res, next) => {
         ...JSON.parse(req.body.book),
         imageUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`
     } : { ...req.body };
+
     delete bookObject._userId;
+
     Book.findOne({ _id: req.params.id })
         .then((book) => {
             if (book.userId != req.auth.userId) {
@@ -32,6 +34,9 @@ exports.modifyBook = (req, res, next) => {
                     .catch(error => res.status(400).json({ error }));
             }
         })
+        .catch((error) => {
+            res.status(400).json({ error });
+        });
 };
 
 exports.deleteBook = (req, res, next) => {
@@ -41,13 +46,14 @@ exports.deleteBook = (req, res, next) => {
                 res.status(401).json({ message: 'Non authorisé' })
             } else {
                 const filename = book.imageUrl.split('/images/')[1];
-                fs.unlink('images/${filename}', () => {
+                fs.unlink(`images/${filename}`, () => {
                     Book.deleteOne({ _id: req.params.id })
                         .then(() => res.status(200).json({ message: 'Livre supprimé !' }))
                         .catch(error => res.status(400).json({ error }));
                 })
             }
         })
+        .catch(error => { res.status(500).json({ error }) });
 };
 
 exports.getOneBook = (req, res, next) => {
@@ -61,4 +67,3 @@ exports.getAllBooks = (req, res, next) => {
         .then(books => res.status(200).json(books))
         .catch(error => res.status(400).json({ error }));
 };
-
