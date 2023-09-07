@@ -107,7 +107,7 @@ exports.rateABook = (req, res, next) => {
 };
 
 // Affichage des 3 meilleurs livres :
-exports.bestRating = (req, res) => {
+exports.bestRatings = (req, res) => {
     Book.find()
         .then(books => {
             //Ordonner les livres par note croissante :

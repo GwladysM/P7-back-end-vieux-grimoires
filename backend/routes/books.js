@@ -19,7 +19,7 @@ router.get('/:id', bookCtrl.getOneBook);
 router.get('/', bookCtrl.getAllBooks);
 
 // Affichage des 3 meilleurs livres :
-router.get('/bestrating', bookCtrl.bestRating);
+router.get('/bestrating', bookCtrl.bestRatings);
 
 // Modifier un livre :
 router.put('/:id', auth, multer, bookCtrl.modifyBook);
