@@ -102,20 +102,15 @@ exports.rateABook = (req, res, next) => {
 
             return book.save();
         })
-        .then(() => res.status(201).json({ message: 'Note ajoutée !' }))
+        .then(updatedBook => { res.status(200).json(updatedBook) })
+        //.then(() => res.status(201).json({ message: 'Note ajoutée !' }))
         .catch(error => res.status(400).json({ error }));
 };
 
 // Affichage des 3 meilleurs livres :
 exports.bestRatings = (req, res) => {
-    Book.find()
-        .then(books => {
-            //Ordonner les livres par note croissante :
-            books.sort((a, b) => b.averageRating - a.averageRating);
-
-            //Choix des 3 premiers livres :
-            const bestBooks = books.slice(0, 3);
-            res.status(200).json(bestBooks)
-        })
-        .catch(error => res.status(400).json({ error }));
+    // Récupération de la liste des livres, ordonné par ordre décroissant et limité à 3
+    Book.find().sort({ averageRating: -1 }).limit(3)
+        .then(books => res.status(200).send(books))
+        .catch(error => res.status(500).json({ error }));
 };
