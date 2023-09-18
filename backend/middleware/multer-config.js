@@ -1,6 +1,4 @@
 const multer = require('multer');
-const fs = require('fs');
-const sharp = require('sharp');
 const SharpMulter = require('sharp-multer');
 
 const MIME_TYPES = {
@@ -12,15 +10,16 @@ const MIME_TYPES = {
 const storage = SharpMulter({
     destination: (req, file, callback) => callback(null, "images"),
     imageOptions: {
-        fileFormat: "jpg",
-        quality: 50,
+        fileFormat: "webp",
+        quality: 30,
         resize: { width: 400, height: 500 },
-        fileName: (req, file, callback) => {
-            const name = file.originalname.split(' ').joint('_')
-            callback(null, name + Date.now() + '.' + extension);
+        filename: (req, file, callback) => {
+            const timestamp = new Date().toISOString();
+            const ref = `${timestamp}-${file.originalname}.webp`
+            callback(null, ref);
         }
     }
 });
-const upload = multer({ storage });
+const upload = multer({ storage: storage });
 
 module.exports = upload.single('image');
